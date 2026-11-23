@@ -1,0 +1,24 @@
+#!/bin/sh
+# 2D Venturi passage (steady laminar simpleFoam, Re = U*H/nu = 100). Three meshes k = 1, 2, 4 run in
+# parallel (3 single-core jobs). Then export + verification.   ./Allrun
+cd "${0%/*}" || exit 1
+HERE=$(pwd); ROOT=$(cd ../.. && pwd)
+: "${WM_PROJECT_DIR:?Source the OpenFOAM environment first}"
+KS=${KS:-"1 2 4"}
+
+run_one() {
+    k=$1; CASE="$HERE/run_k$k"
+    rm -rf "$CASE"; mkdir "$CASE"; cp -r 0 constant system "$CASE/"
+    python3 "$ROOT/scripts/openfoam/generate_venturi_mesh.py" --k "$k" --out "$CASE/system/blockMeshDict" || return 1
+    cd "$CASE" || return 1
+    blockMesh   > log.blockMesh 2>&1 &&
+    checkMesh   > log.checkMesh 2>&1 &&
+    simpleFoam  > log.simpleFoam 2>&1 &&
+    postProcess -func writeCellCentres -latestTime > log.writeCellCentres 2>&1
+}
+for k in $KS; do run_one "$k" & done
+wait
+for k in $KS; do
+    grep -q "solution converged" "$HERE/run_k$k/log.simpleFoam" || { echo "k=$k did NOT converge, see run_k$k/log.simpleFoam"; exit 1; }
+done
+python3 "$ROOT/scripts/openfoam/export_venturi.py" --ks $KS && python3 "$ROOT/scripts/verification/verify_venturi.py" --ks $KS
