@@ -1,0 +1,17 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| OpenFOAM ESI v2606 -- lid-driven cavity, Re = 100 (nu = 0.01, U_lid = 1, L = 1) |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      meshParams;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// TEMPLATE values. Allrun overwrites this file inside each run_N<cells> copy.
+nCells   64;        // cells per direction
+dtValue  0.0025;    // 0.16/nCells  ->  Courant ~ U*dt/dx = 0.16 < 0.5
+tEnd     100;       // end time (convective time units L/U)
+tWrite   5;         // write interval (time units); purgeWrite keeps the last 3
