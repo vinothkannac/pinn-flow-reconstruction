@@ -1,0 +1,26 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| OpenFOAM ESI v2606 -- 2D Venturi passage, Re = U*H/nu = 100                      |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     simpleFoam;
+startFrom       startTime;
+startTime       0;
+stopAt          endTime;
+endTime         20000;
+deltaT          1;
+writeControl    timeStep;
+writeInterval   500;
+purgeWrite      2;
+writeFormat     ascii;
+writePrecision  10;
+timeFormat      general;
+timePrecision   8;
+runTimeModifiable false;
