@@ -1,0 +1,5 @@
+#!/bin/sh
+# Removes what Allrun generated (run folders, exported data, steady-state files).
+cd "${0%/*}" || exit 1
+rm -rf run_N* ../../results/cavity/steady_N*.json ../../data/cavity/openfoam_N*.npz
+echo "cleaned (data/cavity/ghia_re100.csv is not touched)"
