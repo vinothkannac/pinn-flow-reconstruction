@@ -1,0 +1,28 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| OpenFOAM ESI v2606 -- 2D Venturi passage, Re = U*H/nu = 100                      |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    p { solver GAMG; smoother GaussSeidel; tolerance 1e-10; relTol 0.05; }
+    U { solver smoothSolver; smoother symGaussSeidel; tolerance 1e-10; relTol 0.1; }
+}
+SIMPLE
+{
+    nNonOrthogonalCorrectors 1;
+    consistent      yes;
+    residualControl { p 1e-9; U 1e-9; }
+}
+relaxationFactors
+{
+    equations { U 0.9; }
+    fields    { p 1.0; }
+}
