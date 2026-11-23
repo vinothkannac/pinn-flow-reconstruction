@@ -1,0 +1,35 @@
+#!/bin/sh
+# Runs the whole cavity case: ./Allrun
+#   - needs OpenFOAM ESI v2606 sourced (blockMesh, icoFoam, postProcess on PATH)
+#   - needs python3 + numpy (pip install -r ../../requirements.txt)
+# Environment overrides: MESHES="32 64 128"  TEND=100  CO_TARGET=0.16
+cd "${0%/*}" || exit 1
+HERE=$(pwd)
+ROOT=$(cd ../.. && pwd)
+
+: "${WM_PROJECT_DIR:?Source the OpenFOAM environment first}"
+MESHES=${MESHES:-"32 64 128"}
+TEND=${TEND:-100}
+CO_TARGET=${CO_TARGET:-0.16}   # dt = CO_TARGET / N  ->  Co = U_lid*dt/dx = CO_TARGET (< 0.5)
+
+for N in $MESHES; do
+    CASE="$HERE/run_N$N"
+    echo "=== mesh ${N}x${N} ==="
+    rm -rf "$CASE"; mkdir "$CASE"
+    cp -r 0 constant system "$CASE/"
+    DT=$(awk -v n="$N" -v c="$CO_TARGET" 'BEGIN{printf "%.8g", c/n}')
+    sed -i -e "s/^nCells .*/nCells   $N;/" \
+           -e "s/^dtValue .*/dtValue  $DT;/" \
+           -e "s/^tEnd .*/tEnd     $TEND;/" "$CASE/system/meshParams"
+    (
+        cd "$CASE" || exit 1
+        blockMesh                                  > log.blockMesh 2>&1 &&
+        icoFoam                                    > log.icoFoam 2>&1 &&
+        postProcess -func writeCellCentres -latestTime > log.writeCellCentres 2>&1
+    ) || { echo "OpenFOAM failed for N=$N, see $CASE/log.*"; exit 1; }
+    python3 "$ROOT/scripts/openfoam/check_steady.py" --case "$CASE" --N "$N" \
+        || echo "WARNING: steady-state criterion NOT met for N=$N (see message above)"
+done
+
+python3 "$ROOT/scripts/openfoam/export_cavity.py" --meshes $MESHES
+echo "Done. Next: provide data/cavity/ghia_re100.csv, then  python scripts/verification/verify_cavity.py"
