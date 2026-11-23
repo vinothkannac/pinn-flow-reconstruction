@@ -1,0 +1,5 @@
+#!/bin/sh
+# Removes what Allrun generated (run folders, exported data, verification table).
+cd "${0%/*}" || exit 1
+rm -rf run_k* ../../results/venturi/verification.csv ../../data/venturi/openfoam_k*.npz
+echo "cleaned"
