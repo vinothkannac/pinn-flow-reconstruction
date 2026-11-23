@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+openfoam/*/run_*/
+results/*/checkpoints/
+*.pt
