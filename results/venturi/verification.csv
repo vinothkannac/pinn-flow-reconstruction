@@ -1,0 +1,2 @@
+k,cells,p_min,x_pmin,y_pmin,dp_inlet_to_outlet,dpdx_inlet_section,dpdx_poiseuille,flux_dev_inlet,flux_dev_throat,flux_dev_outlet
+1,4800,-0.3835954116,5.22504931,-0.2508623028,3.9408761060999993,-0.11962803903826436,-0.12,7.365390999991561e-05,0.001256557545000092,0.0012353246600000922
