@@ -1,0 +1,32 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| OpenFOAM ESI v2606 -- lid-driven cavity, Re = 100 (nu = 0.01, U_lid = 1, L = 1) |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "meshParams"
+
+application     icoFoam;
+
+startFrom       startTime;
+startTime       0;
+stopAt          endTime;
+endTime         $tEnd;
+deltaT          $dtValue;
+
+writeControl    runTime;
+writeInterval   $tWrite;
+purgeWrite      3;          // keep only the last 3 write times (used by check_steady.py)
+
+writeFormat     ascii;
+writePrecision  10;
+writeCompression off;
+timeFormat      general;
+timePrecision   8;
+runTimeModifiable false;
