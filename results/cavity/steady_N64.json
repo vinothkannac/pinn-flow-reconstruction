@@ -1,0 +1,11 @@
+{
+  "N": 64,
+  "t_prev": 95.0,
+  "t_last": 100.0,
+  "max_abs_dU_over_interval": 1.000000082740371e-10,
+  "max_abs_dp_over_interval": 2.3999999904100733e-10,
+  "tol": 1e-05,
+  "steady": true,
+  "max_courant": 0.1523607308,
+  "courant_ok": true
+}
