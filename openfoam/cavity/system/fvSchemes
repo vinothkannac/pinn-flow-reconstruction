@@ -1,0 +1,18 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| OpenFOAM ESI v2606 -- lid-driven cavity, Re = 100 (nu = 0.01, U_lid = 1, L = 1) |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes          { default Euler; }
+gradSchemes         { default Gauss linear; }
+divSchemes          { default none; div(phi,U) Gauss linear; }
+laplacianSchemes    { default Gauss linear orthogonal; }
+interpolationSchemes{ default linear; }
+snGradSchemes       { default orthogonal; }
